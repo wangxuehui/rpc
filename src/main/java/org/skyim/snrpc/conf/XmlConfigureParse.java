@@ -2,10 +2,12 @@ package org.skyim.snrpc.conf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * @author skyim E-mail:wxh64788665@gmail.com
  * @version 创建时间：2014年12月1日 上午10:06:51 类说明
  */
-public class XmlConfigureParse {
+public class XmlConfigureParse implements ConfigureParse{
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SnRpcConfig.class);
 
@@ -78,5 +80,20 @@ public class XmlConfigureParse {
 		InputStream is = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(fileName);
 		return is;
+	}
+
+	public List<RpcService> parseService() {
+		// TODO Auto-generated method stub
+		List<RpcService> slist =new ArrayList<RpcService>();
+		Node serviceRoot =root.selectSingleNode("//rpcServices");
+		List<Element> serviceList =serviceRoot.selectNodes("//rpcService");
+		
+		int i=0;
+		for(Element serviceNode:serviceList){
+			
+		}
+		
+		
+		return null;
 	}
 }
