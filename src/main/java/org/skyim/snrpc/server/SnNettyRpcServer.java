@@ -1,6 +1,10 @@
 package org.skyim.snrpc.server;
 
+import java.util.Map;
+
 import org.skyim.snrpc.SnRpcServer;
+import org.skyim.snrpc.conf.SnRpcConfig;
+import org.skyim.snrpc.util.HandlerMapper;
 
 
 /**
@@ -11,9 +15,12 @@ import org.skyim.snrpc.SnRpcServer;
 public class SnNettyRpcServer implements SnRpcServer{
 //	private static final Logger LOGGER = LoggerFactory.getLogger(SnNettyRpcServer.class);
 	
+	private SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
+	private Map<String,Object> handlersMap;
 	
-	public SnNettyRpcServer(Object...  handers){
-		
+	public SnNettyRpcServer(Object...  handlers){
+		snRpcConfig.loadProperties("snrpcserver.properties");
+		this.handlersMap = HandlerMapper.getHandlerMap(handlers);
 	}
 	
 	public SnNettyRpcServer(String fileName,Object... handers){
