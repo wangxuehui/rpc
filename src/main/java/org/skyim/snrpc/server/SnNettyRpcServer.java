@@ -17,19 +17,27 @@ public class SnNettyRpcServer implements SnRpcServer{
 	
 	private SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
 	private Map<String,Object> handlersMap;
+	private int httpListenPort;
 	
 	public SnNettyRpcServer(Object...  handlers){
 		snRpcConfig.loadProperties("snrpcserver.properties");
 		this.handlersMap = HandlerMapper.getHandlerMap(handlers);
 	}
 	
-	public SnNettyRpcServer(String fileName,Object... handers){
-		
+	public SnNettyRpcServer(String fileName,Object... handlers){
+		snRpcConfig.loadProperties(fileName);
+		this.handlersMap = HandlerMapper.getHandlerMap(handlers);
 	}
 	
 	
 	public void start() throws Throwable {
 		// TODO Auto-generated method stub
+		initServerInfo();
+	}
+
+	private void initServerInfo() {
+		// TODO Auto-generated method stub
+		httpListenPort = snRpcConfig.getHttpPort();
 		
 	}
 

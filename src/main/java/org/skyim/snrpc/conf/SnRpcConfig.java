@@ -20,7 +20,7 @@ public class SnRpcConfig {
 	
 	private static final SnRpcConfig snRpcConfig = new SnRpcConfig();
 	
-	private static Properties properties = new  Properties();
+	private Properties properties = new  Properties();
 	
 	private SnRpcConfig(){}
 	
@@ -63,6 +63,20 @@ public class SnRpcConfig {
 
 	public String getProperty(String key, String defaultValue) {
 		return properties.getProperty(key, defaultValue.trim());
+	}
+	/**
+	 * get the server's HTTP port,default is -1
+	 * 
+	 * @return
+	 */
+	public int getHttpPort(){
+		String port =properties.getProperty("snrpc.http.port","-1");
+		return Integer.parseInt(port);
+	}
+	
+	public String getPropertiesFile(){
+		String f = properties.getProperty("properties.file","config.xml");
+		return f.trim();
 	}
 
 }
