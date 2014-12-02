@@ -14,10 +14,25 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 public class SnRpcRequestDecoder extends ByteToMessageDecoder {
 
 	@Override
-	protected void decode(ChannelHandlerContext arg0, ByteBuf arg1,
-			List<Object> arg2) throws Exception {
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
+			List<Object> out) throws Exception {
 		// TODO Auto-generated method stub
-
+		if(in.readableBytes() < 4) {
+			return;
+		}
+		in.markReaderIndex();
+		int dataLength = in.readInt();
+		if(dataLength<0) {
+			ctx.close();
+		}
+		if(in.readableBytes() < dataLength){
+			in.resetReaderIndex();
+		}
+		byte[] body = new byte[dataLength];
+		in.readBytes(body);
+		
 	}
+
+
 
 }

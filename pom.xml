@@ -41,5 +41,10 @@
         <artifactId>reflectasm</artifactId>
         <version>1.10.0</version>
     </dependency>
+    <dependency>
+	<groupId>com.google.protobuf</groupId>
+	<artifactId>protobuf-java</artifactId>
+	<version>2.6.1</version>
+	</dependency>
   </dependencies>
 </project>
