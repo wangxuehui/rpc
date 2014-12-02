@@ -5,5 +5,5 @@ package org.skyim.snrpc.client;
  * 类说明
  */
 public interface SnRpcClient {
-
+	public <T> T proxy(Class<T> interfaceClass) throws Throwable;
 }

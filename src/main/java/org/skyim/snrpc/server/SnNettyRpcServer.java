@@ -38,6 +38,7 @@ public class SnNettyRpcServer implements SnRpcServer{
 	private void initServerInfo() {
 		// TODO Auto-generated method stub
 		httpListenPort = snRpcConfig.getHttpPort();
+		new ParseXmlToService().parse();
 		
 	}
 
