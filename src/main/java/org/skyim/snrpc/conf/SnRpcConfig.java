@@ -78,5 +78,11 @@ public class SnRpcConfig {
 		String f = properties.getProperty("properties.file","config.xml");
 		return f.trim();
 	}
+	
+	public boolean getDevMod(){
+		String dev = properties.getProperty("snrpc.dev","false");
+		return Boolean.parseBoolean(dev);
+		
+	}
 
 }
