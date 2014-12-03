@@ -9,10 +9,10 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月2日 下午2:14:18
+ * @version 创建时间：2014年12月3日 下午2:55:40
  * 类说明
  */
-public class SnRpcRequestDecoder extends ByteToMessageDecoder {
+public class SnRpcResponseDecoder extends ByteToMessageDecoder{
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
@@ -33,11 +33,9 @@ public class SnRpcRequestDecoder extends ByteToMessageDecoder {
 		in.readBytes(body);
 		final ProtobufSerializer protobuf = new ProtobufSerializer();
 		
-		SnRpcRequest snRpcRequest = protobuf.deserialize(body, SnRpcRequest.class);
+		SnRpcResponse snRpcResponse = protobuf.deserialize(body, SnRpcResponse.class);
 
-		out.add(snRpcRequest);
+		out.add(snRpcResponse);
 	}
-
-
 
 }
