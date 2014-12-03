@@ -20,11 +20,9 @@ public class RpcImplementor implements Serializable{
 	
 	private MethodAccess methodAccess;
 	
-	
 	public RpcImplementor(){
 		
 	}
-
 	public RpcImplementor(Class<?> processorClass){
 		super();
 		this.processorClass = processorClass;
@@ -34,13 +32,9 @@ public class RpcImplementor implements Serializable{
 	public Class<?> getProcessorClass() {
 		return processorClass;
 	}
-
-
 	public void setProcessorClass(Class<?> processorClass) {
 		this.processorClass = processorClass;
 	}
-
-
 	public MethodAccess getMethodAccess() {
 		return methodAccess;
 	}
