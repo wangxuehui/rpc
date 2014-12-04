@@ -68,7 +68,7 @@ public class XmlConfigureParse implements ConfigureParse{
 				}
 			}
 		}
-		return null;
+		return document;
 	}
 
 	private InputStream getFileStream() {

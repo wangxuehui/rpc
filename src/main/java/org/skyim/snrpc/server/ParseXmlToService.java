@@ -19,7 +19,7 @@ public class ParseXmlToService {
 			ConfigureParse parse =new XmlConfigureParse(configFile);
 			List<RpcService> serviceList = parse.parseService();
 			for(RpcService service:serviceList){
-				
+				SnNettyRpcServerHandler.putService(service);
 			}
 		}
 }

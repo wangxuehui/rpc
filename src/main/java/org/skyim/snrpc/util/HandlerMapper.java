@@ -27,7 +27,7 @@ public class HandlerMapper {
 			}
 			
 		}
-		return null;
+		return handlerMap;
 	}
 	
 	private static boolean ignore(String interfaceName){

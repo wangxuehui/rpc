@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+ <!-- rpc interface services -->    
+ <rpcServices>
+        <rpcService name="SnRpcInterface" interface="test.client.SnRpcInterface" overload="true">
+           <rpcImplementor  class="test.client.SnRpcImpl"/> 
+        </rpcService>
+    </rpcServices>
+</application>
