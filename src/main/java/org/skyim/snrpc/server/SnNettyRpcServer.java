@@ -70,7 +70,7 @@ public class SnNettyRpcServer implements SnRpcServer{
                  public void initChannel(SocketChannel ch) throws Exception {
                 	 ch.pipeline().addLast(new SnRpcRequestDecoder());
                 	 ch.pipeline().addLast(new SnRpcResponseEncoder());
-                     ch.pipeline().addLast(new SnNettyRpcServerHandler());
+                     ch.pipeline().addLast(new SnNettyRpcServerHandler(handlersMap));
                  }
              })
              .option(ChannelOption.SO_BACKLOG, 128)          // (5)

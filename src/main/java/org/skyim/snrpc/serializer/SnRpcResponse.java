@@ -11,6 +11,10 @@ public class SnRpcResponse {
 	public SnRpcResponse(){
 		
 	}
+	public SnRpcResponse(String requestID) {
+		// TODO Auto-generated constructor stub
+		this.requestID = requestID;
+	}
 	public String getRequestID() {
 		return requestID;
 	}
