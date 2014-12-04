@@ -2,7 +2,7 @@ package org.skyim.snrpc.serializer;
 
 import java.util.List;
 
-import in.srid.serializer.protobuf.ProtobufSerializer;
+import in.srid.serializer.jackson.JacksonSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -18,6 +18,8 @@ public class SnRpcRequestDecoder extends ByteToMessageDecoder {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
 			List<Object> out) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("in.decode()"+in.readableBytes());
+
 		if(in.readableBytes() < 4) {
 			return;
 		}
@@ -31,11 +33,12 @@ public class SnRpcRequestDecoder extends ByteToMessageDecoder {
 		}
 		byte[] body = new byte[dataLength];
 		in.readBytes(body);
-		final ProtobufSerializer protobuf = new ProtobufSerializer();
-		
-		SnRpcRequest snRpcRequest = protobuf.deserialize(body, SnRpcRequest.class);
 
-		out.add(snRpcRequest);
+
+	   final JacksonSerializer jackson = new JacksonSerializer();
+	   SnRpcRequest snRpcRequest  = jackson.deserialize(body, SnRpcRequest.class);
+		   
+	   out.add(snRpcRequest);
 	}
 
 

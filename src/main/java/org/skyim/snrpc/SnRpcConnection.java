@@ -11,5 +11,5 @@ import org.skyim.snrpc.serializer.SnRpcResponse;
 public interface SnRpcConnection {
 
 	SnRpcResponse sendRequest(SnRpcRequest request) throws Throwable;
-
+	public  void connection() throws Throwable ;
 }

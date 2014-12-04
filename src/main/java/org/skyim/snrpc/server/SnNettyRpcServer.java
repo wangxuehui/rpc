@@ -68,8 +68,8 @@ public class SnNettyRpcServer implements SnRpcServer{
              .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
-                	 ch.pipeline().addLast(new SnRpcRequestDecoder());
-                	 ch.pipeline().addLast(new SnRpcResponseEncoder());
+//                	 ch.pipeline().addLast(new SnRpcRequestDecoder());
+//                	 ch.pipeline().addLast(new SnRpcResponseEncoder());
                      ch.pipeline().addLast(new SnNettyRpcServerHandler(handlersMap));
                  }
              })

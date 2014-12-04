@@ -30,7 +30,6 @@ public abstract class AbstractProtoSerializer implements Serializer, Deserialize
     @Override
     public <T> T deserialize( final byte[] bytes , final Class<T> clazz ) {
         try {
-            @SuppressWarnings( "unchecked" )
             final T result = (T) objenesis.newInstance( clazz );
             return deserializeInternal( bytes, result, SchemaUtils.getSchema( clazz ) );
         }

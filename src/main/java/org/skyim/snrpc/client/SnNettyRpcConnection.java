@@ -31,7 +31,10 @@ public class SnNettyRpcConnection  extends ChannelInboundHandlerAdapter implemen
 	private volatile SnRpcResponse response;
 	//org.jboss.netty.channel.Channel
 	private volatile Channel channel;
+	
+	private SnRpcConfig snRpcConfig =SnRpcConfig.getInstance();
     public SnNettyRpcConnection(String host, int port) {
+    	super();
 		// TODO Auto-generated constructor stub
 		this.inetAddr = new InetSocketAddress(host, port);
 	}
@@ -57,13 +60,15 @@ public class SnNettyRpcConnection  extends ChannelInboundHandlerAdapter implemen
 				public void initChannel(SocketChannel ch) throws Exception {
 					ch.pipeline().addLast(new SnRpcResponseDecoder());
 					ch.pipeline().addLast(new SnRpcRequestEncoder());
-					ch.pipeline().addLast(this);
+					ch.pipeline().addLast(new SnNettyRpcConnection(snRpcConfig.getProperty("snrpc.http.host", "localhost"),
+							Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")
+							)));
 				}
 			});
 			// Start the connection attempt.
 			channel = b.connect(inetAddr).sync().channel(); // (5)
 			// Wait until the connection is closed.
-			channel.closeFuture().sync();
+			// channel.closeFuture().sync();
 		} finally {
 			workerGroup.shutdownGracefully();
 		}

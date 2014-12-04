@@ -1,6 +1,6 @@
 package org.skyim.snrpc.serializer;
 
-import in.srid.serializer.protobuf.ProtobufSerializer;
+import in.srid.serializer.jackson.JacksonSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -15,9 +15,9 @@ public class SnRpcRequestEncoder  extends MessageToByteEncoder<SnRpcRequest>{
 	@Override
 	protected void encode(ChannelHandlerContext ctx, SnRpcRequest msg,
 			ByteBuf out) throws Exception {
-		
-	   final ProtobufSerializer protobuf = new ProtobufSerializer();
-	   byte[] data = protobuf.serialize(msg);
+
+	   final JacksonSerializer jackson = new JacksonSerializer();
+	   byte[] data = jackson.serialize(msg);
        int dataLength = data.length;
 		// TODO Auto-generated method stub
        out.writeInt(dataLength);

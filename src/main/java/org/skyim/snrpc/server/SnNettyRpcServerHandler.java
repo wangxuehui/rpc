@@ -45,17 +45,19 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
-	public void channelRead(final ChannelHandlerContext ctx, Object msg) { // (2)
+	public void channelRead( ChannelHandlerContext ctx, Object msg) { // (2)
 		try {
+			System.out.println("common");
 			// Do something with msg
 			if (!(msg instanceof SnRpcRequest)) {
 				return;
 			}
-
+			System.out.println("common1");
 			SnRpcRequest request = (SnRpcRequest) msg;
 			SnRpcResponse response = new SnRpcResponse(request.getRequestID());
 
 			try {
+				LOGGER.debug(request+"");
 				Object result = handler(request);
 				response.setResult(result);
 			} catch (Throwable t) {
@@ -68,7 +70,7 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 	            @Override
 	            public void operationComplete(ChannelFuture future) {
 	                assert f == future;
-	                ctx.close();
+	                //ctx.close();
 	            }
 	        }); //
 		} finally {
