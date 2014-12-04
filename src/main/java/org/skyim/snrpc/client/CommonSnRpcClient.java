@@ -24,9 +24,8 @@ public class CommonSnRpcClient implements SnRpcClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SnRpcConfig.class);
 
 	private SnRpcInvoker invoker = new SnRpcInvoker();
-	private boolean connected = false;
 	private SnRpcConnectionFactory snRpcConnectionFactory;
-	private SnRpcConnection connection;
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T proxy(Class<T> interfaceClass) throws Throwable {
 		// TODO Auto-generated method stub
@@ -68,14 +67,20 @@ public class CommonSnRpcClient implements SnRpcClient {
 			SnRpcConnection connection = null;
 			try {
 				connection = getConnection();
-				
+				response = connection.sendRequest(request);
 			}catch(Throwable t){
-				
+				LOGGER.warn("send rpc request fail! request: <{}>",
+						new Object[] { request }, t);
+				throw new RuntimeException(t);
 			}finally {
-				
+				recycle(connection);
 			}
 			
-			return null;
+			if (response.getException() != null) {
+				throw response.getException();
+			} else {
+				return response.getResult();
+			}
 		}
 
 		private SnRpcConnection getConnection() throws Throwable {
@@ -85,6 +90,21 @@ public class CommonSnRpcClient implements SnRpcClient {
 		private String generateRequestID() {
 			// TODO Auto-generated method stub
 			return Sequence.next() + "";
+		}
+		
+
+		/**
+		 * recycle
+		 * @param connection
+		 */
+		private void recycle(SnRpcConnection connection) {
+			if (null != connection && null != snRpcConnectionFactory) {
+				try {
+					snRpcConnectionFactory.recycle(connection);
+				} catch (Throwable t) {
+					LOGGER.warn("recycle rpc connection fail!", t);
+				}
+			}
 		}
 
 	}
