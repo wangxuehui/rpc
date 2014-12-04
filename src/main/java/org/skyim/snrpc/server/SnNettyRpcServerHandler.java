@@ -12,6 +12,8 @@ import org.skyim.snrpc.util.ReflectionCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -43,7 +45,7 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
+	public void channelRead(final ChannelHandlerContext ctx, Object msg) { // (2)
 		try {
 			// Do something with msg
 			if (!(msg instanceof SnRpcRequest)) {
@@ -51,7 +53,6 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 			}
 
 			SnRpcRequest request = (SnRpcRequest) msg;
-
 			SnRpcResponse response = new SnRpcResponse(request.getRequestID());
 
 			try {
@@ -62,7 +63,14 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 						new Object[] { request }, t);
 				response.setException(t);
 			}
-
+		    final ChannelFuture f = ctx.writeAndFlush(response); //
+		    f.addListener(new ChannelFutureListener() {
+	            @Override
+	            public void operationComplete(ChannelFuture future) {
+	                assert f == future;
+	                ctx.close();
+	            }
+	        }); //
 		} finally {
 			ReferenceCountUtil.release(msg);
 		}
