@@ -46,8 +46,6 @@ snrpc.http.port=8080
 ```
 log4j.properties
 ------------------------------------------
-
-# This sets the global logging level and specifies the appenders
 log4j.rootLogger=DEBUG, myConsoleAppender
 ```ruby
 # settings for the console appender
@@ -85,5 +83,6 @@ public class ClientDemo {
 		        e.printStackTrace();
 		    }
 		}
+		}
 		```
-}
+
