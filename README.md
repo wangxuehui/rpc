@@ -43,11 +43,13 @@ snrpc.dev=false
 snrpc.http.host=localhost
 #server port
 snrpc.http.port=8080
+#Serialization 0 for jdk,1 for jackson,2 for fasterxml,3 for protostuff,4 for kryo,5 for protobuf
+snrpc.serializataion.type = 0
 ```
 log4j.properties
 ------------------------------------------
-log4j.rootLogger=DEBUG, myConsoleAppender
 ```ruby
+log4j.rootLogger=DEBUG, myConsoleAppender
 # settings for the console appender
 log4j.appender.myConsoleAppender=org.apache.log4j.ConsoleAppender
 log4j.appender.myConsoleAppender.layout=org.apache.log4j.PatternLayout
