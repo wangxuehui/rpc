@@ -4,8 +4,10 @@
 --------------------------------------------------
 1. server class;
 <blockquote>
+<p>
 //define an interface:
 public interface SnRpcInterface {
    public String getMessage(String param);
 }
+</p>
 </blockquote>
