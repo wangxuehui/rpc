@@ -18,7 +18,6 @@ public class SnRpcRequestDecoder extends ByteToMessageDecoder {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
 			List<Object> out) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("in.decode()"+in.readableBytes());
 
 		if(in.readableBytes() < 4) {
 			return;

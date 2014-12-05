@@ -15,14 +15,14 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.ReferenceCountUtil;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
  * @version 创建时间：2014年12月3日 下午3:17:26 类说明
  */
-public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
+public class SnNettyRpcServerHandler extends SimpleChannelInboundHandler<SnRpcRequest> {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SnNettyRpcServer.class);
 
@@ -30,7 +30,6 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 	private Map<String, Object> handlersMap;
 
 	public SnNettyRpcServerHandler(Map<String, Object> handlersMap) {
-		super();
 		this.handlersMap = handlersMap;
 	}
 
@@ -44,39 +43,6 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 		return serviceMap.get(serviceName);
 	}
 
-	@Override
-	public void channelRead( ChannelHandlerContext ctx, Object msg) { // (2)
-		try {
-			System.out.println("common");
-			// Do something with msg
-			if (!(msg instanceof SnRpcRequest)) {
-				return;
-			}
-			System.out.println("common1");
-			SnRpcRequest request = (SnRpcRequest) msg;
-			SnRpcResponse response = new SnRpcResponse(request.getRequestID());
-
-			try {
-				LOGGER.debug(request+"");
-				Object result = handler(request);
-				response.setResult(result);
-			} catch (Throwable t) {
-				LOGGER.warn("handler rpc request fail! request:<{}>",
-						new Object[] { request }, t);
-				response.setException(t);
-			}
-		    final ChannelFuture f = ctx.writeAndFlush(response); //
-		    f.addListener(new ChannelFutureListener() {
-	            @Override
-	            public void operationComplete(ChannelFuture future) {
-	                assert f == future;
-	                //ctx.close();
-	            }
-	        }); //
-		} finally {
-			ReferenceCountUtil.release(msg);
-		}
-	}
 
 	private Object handler(SnRpcRequest request) throws Throwable {
 		// TODO Auto-generated method stub
@@ -107,5 +73,36 @@ public class SnNettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 		// Close the connection when an exception is raised.
 		cause.printStackTrace();
 		ctx.close();
+	}
+
+
+	@Override
+	protected void channelRead0(final ChannelHandlerContext ctx, SnRpcRequest msg)
+			throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			SnRpcRequest request = (SnRpcRequest) msg;
+			SnRpcResponse response = new SnRpcResponse(request.getRequestID());
+
+			try {
+				LOGGER.debug(request+"");
+				Object result = handler(request);
+				response.setResult(result);
+			} catch (Throwable t) {
+				LOGGER.warn("handler rpc request fail! request:<{}>",
+						new Object[] { request }, t);
+				response.setException(t);
+			}
+		    final ChannelFuture f = ctx.writeAndFlush(response); //
+		    f.addListener(new ChannelFutureListener() {
+	            @Override
+	            public void operationComplete(ChannelFuture future) {
+	                assert f == future;
+	                ctx.close();
+	            }
+	        }); //
+		} finally {
+			ReferenceCountUtil.release(msg);
+		}
 	}
 }

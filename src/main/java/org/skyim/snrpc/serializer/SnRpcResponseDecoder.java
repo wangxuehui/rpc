@@ -18,11 +18,9 @@ public class SnRpcResponseDecoder extends ByteToMessageDecoder{
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in,
 			List<Object> out) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("in.readableBytes()"+in.readableBytes());
 		if(in.readableBytes() < 4) {
 			return;
 		}
-		System.out.println("come");
 		in.markReaderIndex();
 		int dataLength = in.readInt();
 		if(dataLength<0) {
@@ -38,8 +36,7 @@ public class SnRpcResponseDecoder extends ByteToMessageDecoder{
 
 	   final JacksonSerializer jackson = new JacksonSerializer();
 	   SnRpcResponse snRpcResponse  = jackson.deserialize(body, SnRpcResponse.class);
-		 	 
-		out.add(snRpcResponse);
+	   out.add(snRpcResponse);
 	}
 
 }

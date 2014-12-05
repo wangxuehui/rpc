@@ -67,9 +67,7 @@ public class CommonSnRpcClient implements SnRpcClient {
 			SnRpcConnection connection = null;
 			try {
 				connection = getConnection();
-				connection.connection();
-				response = connection.sendRequest(request);
-				System.out.println("end");
+				response = connection.connect(request);
 			}catch(Throwable t){
 				LOGGER.warn("send rpc request fail! request: <{}>",
 						new Object[] { request }, t);
@@ -77,7 +75,6 @@ public class CommonSnRpcClient implements SnRpcClient {
 			}finally {
 				recycle(connection);
 			}
-			
 			if (response.getException() != null) {
 				throw response.getException();
 			} else {

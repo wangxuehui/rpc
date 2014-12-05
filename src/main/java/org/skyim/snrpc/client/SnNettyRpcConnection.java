@@ -12,10 +12,10 @@ import org.skyim.snrpc.serializer.SnRpcResponseDecoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -25,32 +25,31 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @version 创建时间：2014年12月4日 下午1:47:02
  * 类说明
  */
-public class SnNettyRpcConnection  extends ChannelInboundHandlerAdapter implements SnRpcConnection{
+public class SnNettyRpcConnection  extends SimpleChannelInboundHandler<SnRpcResponse> implements SnRpcConnection{
 
-	private InetSocketAddress inetAddr;
-	private volatile SnRpcResponse response;
-	//org.jboss.netty.channel.Channel
-	private volatile Channel channel;
+	private InetSocketAddress inetAddr =   new InetSocketAddress("localhost", 8080);
+	private SnRpcResponse response;
+	private final SnRpcRequest request;
+	private volatile Channel ch  ;
 	
 	private SnRpcConfig snRpcConfig =SnRpcConfig.getInstance();
-    public SnNettyRpcConnection(String host, int port) {
-    	super();
+   
+	public SnNettyRpcConnection(String host, int port,final SnRpcRequest request) {
 		// TODO Auto-generated constructor stub
 		this.inetAddr = new InetSocketAddress(host, port);
+		this.request = request;
 	}
 
-	@Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // Server is supposed to send nothing, but if it sends something, discard it.
-		response = (SnRpcResponse) msg;
-		synchronized (channel) {
-			channel.notifyAll();
-		}
-	}
+	
+	
 
-	public  void connection() throws Throwable {
+	public SnRpcResponse connect(final SnRpcRequest request) throws Throwable {
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
+			
+//			final SnNettyRpcConnection snNettyRpcConnection=new SnNettyRpcConnection(snRpcConfig.getProperty("snrpc.http.host", "localhost"),
+//					Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")
+//					),request) ;
 			Bootstrap b = new Bootstrap(); // (1)
 			b.group(workerGroup); // (2)
 			b.channel(NioSocketChannel.class); // (3)
@@ -60,38 +59,42 @@ public class SnNettyRpcConnection  extends ChannelInboundHandlerAdapter implemen
 				public void initChannel(SocketChannel ch) throws Exception {
 					ch.pipeline().addLast(new SnRpcResponseDecoder());
 					ch.pipeline().addLast(new SnRpcRequestEncoder());
-					ch.pipeline().addLast(new SnNettyRpcConnection(snRpcConfig.getProperty("snrpc.http.host", "localhost"),
-							Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")
-							)));
+					ch.pipeline().addLast(SnNettyRpcConnection.this);
 				}
 			});
-			// Start the connection attempt.
-			channel = b.connect(inetAddr).sync().channel(); // (5)
-			// Wait until the connection is closed.
-			// channel.closeFuture().sync();
+			
+		   ch = b.connect(inetAddr).sync().channel();
+	       ch.writeAndFlush(request);    
+	       waitForResponse();   
+	       SnRpcResponse resp = this.response;
+	       if(resp!=null) {
+		       ch.closeFuture().sync();
+	       }
+	       return resp;
 		} finally {
 			workerGroup.shutdownGracefully();
 		}
 	}
 
-
-	@Override
-	public SnRpcResponse sendRequest(SnRpcRequest request) throws Throwable {
-		// TODO Auto-generated method stub
-		
-		channel.writeAndFlush(request);
-		waitForResponse();
-		SnRpcResponse resp = this.response;
-		
-		return resp;
-	}
 	
+	
+
 	public void waitForResponse() {
-		synchronized (channel) {
+		synchronized (ch) {
 			try {
-				channel.wait();
+				ch.wait();
 			} catch (InterruptedException e) {
 			}
+		}
+	}
+
+	@Override
+	protected void channelRead0(ChannelHandlerContext ctx, SnRpcResponse msg)
+			throws Exception {
+		// TODO Auto-generated method stub
+		response =  msg;
+		synchronized (ch) {
+			ch.notifyAll();
 		}
 	}
 	
