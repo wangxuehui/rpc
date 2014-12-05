@@ -37,6 +37,7 @@ public class JdkObjectSerializer implements Serializer, Deserializer {
 
     @Override
     public <T> byte[] serialize( final T source ) {
+
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {

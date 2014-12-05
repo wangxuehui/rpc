@@ -1,10 +1,17 @@
 package org.skyim.snrpc.serializer;
+
+import java.io.Serializable;
+
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
  * @version 创建时间：2014年12月2日 下午2:07:18
  * 类说明
  */
-public class SnRpcRequest {
+public class SnRpcRequest implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4700088399107076960L;
 	private String requestID;
 	private String className;
 	private String methodName;
