@@ -83,6 +83,10 @@ public class ClientDemo {
 		        e.printStackTrace();
 		    }
 		}
-		}
+}
 ```
+
+5.要求
++ jdk1.6 以上
++ maven 3 以上
 
