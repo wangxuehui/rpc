@@ -27,17 +27,21 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class SnNettyRpcConnection  extends SimpleChannelInboundHandler<SnRpcResponse> implements SnRpcConnection{
 
-	private InetSocketAddress inetAddr =   new InetSocketAddress("localhost", 8080);
+	private InetSocketAddress inetAddr ;
 	private SnRpcResponse response;
-	private final SnRpcRequest request;
+//	private final SnRpcRequest request;
 	private volatile Channel ch  ;
 	
 	private SnRpcConfig snRpcConfig =SnRpcConfig.getInstance();
    
+	{
+		inetAddr = new InetSocketAddress(snRpcConfig.getProperty("snrpc.http.host", "localhost"), Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")));
+	}
+	
 	public SnNettyRpcConnection(String host, int port,final SnRpcRequest request) {
 		// TODO Auto-generated constructor stub
 		this.inetAddr = new InetSocketAddress(host, port);
-		this.request = request;
+//		this.request = request;
 	}
 
 	
