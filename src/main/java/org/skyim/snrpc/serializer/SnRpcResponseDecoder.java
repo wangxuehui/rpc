@@ -2,7 +2,15 @@ package org.skyim.snrpc.serializer;
 
 import java.util.List;
 
+import org.skyim.snrpc.conf.SnRpcConfig;
+import org.skyim.snrpc.util.Const;
+
+import in.srid.serializer.fasterxml.FasterxmlSerializer;
 import in.srid.serializer.jackson.JacksonSerializer;
+import in.srid.serializer.jdk.JdkObjectSerializer;
+import in.srid.serializer.kryo.KryoSerializer;
+import in.srid.serializer.protobuf.ProtobufSerializer;
+import in.srid.serializer.protostuff.ProtostuffSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -34,8 +42,33 @@ public class SnRpcResponseDecoder extends ByteToMessageDecoder{
 		in.readBytes(body);
 		
 
-	   final JacksonSerializer jackson = new JacksonSerializer();
-	   SnRpcResponse snRpcResponse  = jackson.deserialize(body, SnRpcResponse.class);
+	   SnRpcResponse snRpcResponse  = null;
+       SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
+       String type = snRpcConfig.getProperty("snrpc.serializataion.type", "5");
+       if(Const.SERIALIZATION_PROTOBUF.equals(type)){
+    	    final ProtobufSerializer protobuf = new ProtobufSerializer();
+    	    snRpcResponse  =  protobuf.deserialize(body, SnRpcResponse.class);
+       }else if(Const.SERIALIZATION_KRYO.equals(type)){
+    	    final KryoSerializer kryo = new KryoSerializer();
+    	    snRpcResponse  =  kryo.deserialize(body, SnRpcResponse.class);
+       }else if(Const.SERIALIZATION_PROTOSTUFF.equals(type)){
+   	    final ProtostuffSerializer protostuff = new ProtostuffSerializer();
+   	 snRpcResponse  =  protostuff.deserialize(body, SnRpcResponse.class);
+       }else if(Const.SERIALIZATION_FASTERXML.equals(type)){
+     	    final FasterxmlSerializer fastxml = new FasterxmlSerializer();
+     	   snRpcResponse  =  fastxml.deserialize(body, SnRpcResponse.class);
+       }else if(Const.SERIALIZATION_JACKSON.equals(type)){
+    	    final JacksonSerializer jackson = new JacksonSerializer();
+    	    snRpcResponse  =  jackson.deserialize(body, SnRpcResponse.class);
+       }else if(Const.SERIALIZATION_JDK.equals(type)){
+   	        final JdkObjectSerializer jdk = new JdkObjectSerializer();
+   	     snRpcResponse  =  jdk.deserialize(body, SnRpcResponse.class);
+       }else {
+    	   final ProtobufSerializer protobuf = new ProtobufSerializer();
+    	   snRpcResponse  =  protobuf.deserialize(body, SnRpcResponse.class);
+       }
+		
+		
 	   out.add(snRpcResponse);
 	}
 

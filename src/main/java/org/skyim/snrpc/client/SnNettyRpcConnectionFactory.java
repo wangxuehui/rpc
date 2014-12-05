@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 
 import org.skyim.snrpc.SnRpcConnection;
 import org.skyim.snrpc.SnRpcConnectionFactory;
+import org.skyim.snrpc.conf.SnRpcConfig;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
