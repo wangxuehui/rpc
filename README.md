@@ -1,6 +1,6 @@
  a simple rpc framework for java
 =================================================
-集成 jdk,jackson,fasterxml,protostuff,kryo,protobuf,作为序列化工具,可以轻松转化序列化方式,使用 4.0.24 作为 NIO。
+集成 jdk,jackson,fasterxml,protostuff,kryo,protobuf,作为序列化工具,可以轻松转化序列化方式,使用 4.0.24 作为 NIO,使用zookeeper 3.4.6来做注册中心,容错性及可用性
 --------------------------------------------------
 1. server class;
 ```ruby
@@ -23,7 +23,10 @@ public class SnRpcImpl implements SnRpcInterface {
 public class ServerDemo {
 	public static void main(String[] args) {
 		SnRpcInterface inter = new SnRpcImpl();
-		SnRpcServer server = new SnNettyRpcServer(new Object[] { inter });
+		SnRpcServer server = new SnNettyRpcServer(new Object[] { inter });		
+		SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
+		ServiceProvider provider = new ServiceProvider();
+        provider.publish(snRpcConfig.getProperty("snrpc.http.host", "127.0.0.1"), Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port","8080")));		
 		try {
 			server.start();
 		} catch (Throwable e) {
@@ -40,12 +43,26 @@ snrpcserver.properties
 #ISDEBUG
 snrpc.dev=false
 #server host
-snrpc.http.host=localhost
+snrpc.http.host=127.0.0.1
 #server port
-snrpc.http.port=8080
+snrpc.http.port=8081
 #Serialization 0 for jdk,1 for jackson,2 for fasterxml,3 for protostuff,4 for kryo,5 for protobuf
-snrpc.serializataion.type = 5
+snrpc.serializataion.type = 1
+#zookeeper ip 192.168.1.182:2181,192.168.1.193:2181
+snrpc.zookeeper.ip=192.168.1.192:2181
 ```
+
+snrpcclient.properties
+------------------------------------------
+```ruby
+#ISDEBUG
+snrpc.dev=false
+#Serialization 0 for jdk,1 for jackson,2 for fasterxml,3 for protostuff,4 for kryo,5 for protobuf
+snrpc.serializataion.type = 1
+#zookeeper ip 192.168.1.182:2181,192.168.1.193:2181
+snrpc.zookeeper.ip=192.168.1.192:2181
+```
+
 log4j.properties
 ------------------------------------------
 ```ruby
@@ -74,18 +91,24 @@ config.xml
 ```ruby
 public class ClientDemo {
 		public static void main(String[] args) {
-			SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
-			snRpcConfig.loadProperties("snrpcserver.properties");
-			SnRpcConnectionFactory factory = new SnNettyRpcConnectionFactory(
-					snRpcConfig.getProperty("snrpc.http.host", "localhost"), Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")));
-		    SnRpcClient client = new CommonSnRpcClient(factory);
-		    try {
-		        SnRpcInterface clazz = client.proxy(SnRpcInterface.class);
-		        String message = clazz.getMessage("come on");
-		        System.out.println("client receive message .... : " + message);
-		    } catch (Throwable e) {
-		        e.printStackTrace();
-		    }
+	        ServiceConsumer consumer = new ServiceConsumer();
+	        String provider = consumer.lookup();
+			String[] providers = provider.split(":");
+			
+			if(providers.length == 3) {
+				System.out.println(providers);
+				SnRpcConnectionFactory factory = new SnNettyRpcConnectionFactory(
+						providers[1], Integer.parseInt(providers[2]));
+				SnRpcClient client = new CommonSnRpcClient(factory);
+			    try {
+			        SnRpcInterface clazz = client.proxy(SnRpcInterface.class);
+			        String message = clazz.getMessage("come on");
+			        System.out.println("client receive message .... : " + message);
+			    } catch (Throwable e) {
+			        e.printStackTrace();
+			    }
+			}
+		
 		}
 	
 }
@@ -94,6 +117,6 @@ public class ClientDemo {
 ```
 
 5.要求
-+ jdk1.6 以上
++ jdk1.7 以上
 + maven 3 以上
 
