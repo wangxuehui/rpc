@@ -90,7 +90,7 @@ public class ServiceConsumer {
                 dataList.add(new String(data));
             }
             LOGGER.debug("node data: {}", dataList);
-            urlList = dataList; // 更新最新的 RMI 地址
+            urlList = dataList; // 更新最新的 skyim 地址
         } catch (KeeperException | InterruptedException e) {
             LOGGER.error("", e);
         }

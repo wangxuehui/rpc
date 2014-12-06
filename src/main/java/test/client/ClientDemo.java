@@ -28,10 +28,6 @@ public class ClientDemo {
 			        e.printStackTrace();
 			    }
 			}
-			
-		
-		   
-			
 		
 		}
 	
