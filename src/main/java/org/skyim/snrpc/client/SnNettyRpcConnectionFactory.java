@@ -22,7 +22,7 @@ public class SnNettyRpcConnectionFactory implements SnRpcConnectionFactory{
 	public SnRpcConnection getConnection() throws Throwable {
 		// TODO Auto-generated method stub
 		return new SnNettyRpcConnection(this.serverAddr.getHostName(),
-				this.serverAddr.getPort(),null);
+				this.serverAddr.getPort());
 	}
 
 	@Override

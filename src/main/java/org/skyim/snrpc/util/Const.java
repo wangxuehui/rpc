@@ -11,4 +11,8 @@ public interface Const {
 	String SERIALIZATION_FASTERXML ="2";
 	String SERIALIZATION_JACKSON   ="1";
 	String SERIALIZATION_JDK       ="0";
+	
+    int ZK_SESSION_TIMEOUT = 5000;
+    String ZK_REGISTRY_PATH = "/skyim";
+    String ZK_PROVIDER_PATH = ZK_REGISTRY_PATH + "/provider";
 }

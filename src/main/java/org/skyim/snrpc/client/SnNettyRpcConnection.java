@@ -3,7 +3,6 @@ package org.skyim.snrpc.client;
 import java.net.InetSocketAddress;
 
 import org.skyim.snrpc.SnRpcConnection;
-import org.skyim.snrpc.conf.SnRpcConfig;
 import org.skyim.snrpc.serializer.SnRpcRequest;
 import org.skyim.snrpc.serializer.SnRpcRequestEncoder;
 import org.skyim.snrpc.serializer.SnRpcResponse;
@@ -31,19 +30,10 @@ public class SnNettyRpcConnection extends
 	private SnRpcResponse response;
 	private Object obj = new Object();
 
-	private SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
 
-	{
-		inetAddr = new InetSocketAddress(snRpcConfig.getProperty(
-				"snrpc.http.host", "localhost"), Integer.parseInt(snRpcConfig
-				.getProperty("snrpc.http.port", "8080")));
-	}
-
-	public SnNettyRpcConnection(String host, int port,
-			final SnRpcRequest request) {
+	public SnNettyRpcConnection(String host, int port) {
 		// TODO Auto-generated constructor stub
 		this.inetAddr = new InetSocketAddress(host, port);
-		// this.request = request;
 	}
 
 	public SnRpcResponse sendRequest(final SnRpcRequest request)
