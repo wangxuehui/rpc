@@ -22,38 +22,34 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月4日 下午1:47:02
- * 类说明
+ * @version 创建时间：2014年12月4日 下午1:47:02 类说明
  */
-public class SnNettyRpcConnection  extends SimpleChannelInboundHandler<SnRpcResponse> implements SnRpcConnection{
+public class SnNettyRpcConnection extends
+		SimpleChannelInboundHandler<SnRpcResponse> implements SnRpcConnection {
 
-	private InetSocketAddress inetAddr ;
+	private InetSocketAddress inetAddr;
 	private SnRpcResponse response;
-//	private final SnRpcRequest request;
-	private volatile Channel ch  ;
-	
-	private SnRpcConfig snRpcConfig =SnRpcConfig.getInstance();
-   
+	private Object obj = new Object();
+
+	private SnRpcConfig snRpcConfig = SnRpcConfig.getInstance();
+
 	{
-		inetAddr = new InetSocketAddress(snRpcConfig.getProperty("snrpc.http.host", "localhost"), Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")));
+		inetAddr = new InetSocketAddress(snRpcConfig.getProperty(
+				"snrpc.http.host", "localhost"), Integer.parseInt(snRpcConfig
+				.getProperty("snrpc.http.port", "8080")));
 	}
-	
-	public SnNettyRpcConnection(String host, int port,final SnRpcRequest request) {
+
+	public SnNettyRpcConnection(String host, int port,
+			final SnRpcRequest request) {
 		// TODO Auto-generated constructor stub
 		this.inetAddr = new InetSocketAddress(host, port);
-//		this.request = request;
+		// this.request = request;
 	}
 
-	
-	
-
-	public SnRpcResponse connect(final SnRpcRequest request) throws Throwable {
+	public SnRpcResponse sendRequest(final SnRpcRequest request)
+			throws Throwable {
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
-			
-//			final SnNettyRpcConnection snNettyRpcConnection=new SnNettyRpcConnection(snRpcConfig.getProperty("snrpc.http.host", "localhost"),
-//					Integer.parseInt(snRpcConfig.getProperty("snrpc.http.port", "8080")
-//					),request) ;
 			Bootstrap b = new Bootstrap(); // (1)
 			b.group(workerGroup); // (2)
 			b.channel(NioSocketChannel.class); // (3)
@@ -66,27 +62,24 @@ public class SnNettyRpcConnection  extends SimpleChannelInboundHandler<SnRpcResp
 					ch.pipeline().addLast(SnNettyRpcConnection.this);
 				}
 			});
-			
-		   ch = b.connect(inetAddr).sync().channel();
-	       ch.writeAndFlush(request);    
-	       waitForResponse();   
-	       SnRpcResponse resp = this.response;
-	       if(resp!=null) {
-		       ch.closeFuture().sync();
-	       }
-	       return resp;
+
+			Channel ch = b.connect(inetAddr).sync().channel();
+			ch.writeAndFlush(request);
+			waitForResponse();
+			SnRpcResponse resp = this.response;
+			if (resp != null) {
+				ch.closeFuture().sync();
+			}
+			return resp;
 		} finally {
 			workerGroup.shutdownGracefully();
 		}
 	}
 
-	
-	
-
 	public void waitForResponse() {
-		synchronized (ch) {
+		synchronized (obj) {
 			try {
-				ch.wait();
+				obj.wait();
 			} catch (InterruptedException e) {
 			}
 		}
@@ -96,10 +89,10 @@ public class SnNettyRpcConnection  extends SimpleChannelInboundHandler<SnRpcResp
 	protected void channelRead0(ChannelHandlerContext ctx, SnRpcResponse msg)
 			throws Exception {
 		// TODO Auto-generated method stub
-		response =  msg;
-		synchronized (ch) {
-			ch.notifyAll();
+		response = msg;
+		synchronized (obj) {
+			obj.notifyAll();
 		}
 	}
-	
+
 }
