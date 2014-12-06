@@ -116,11 +116,12 @@ public class ClientDemo {
 
 ```
 
-5. zookeeper 的官方安裝就行啦
+
 
 6.要求
 + jdk1.7 以上的
 + maven 3 以上
++ zookeeper 官方安装就行
 
 
 
