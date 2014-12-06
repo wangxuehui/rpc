@@ -117,6 +117,8 @@ public class ClientDemo {
 ```
 
 5.要求
-+ jdk1.7 以上
++ jdk1.7 以上的
 + maven 3 以上
+
+6. zookeeper 的安裝
 
