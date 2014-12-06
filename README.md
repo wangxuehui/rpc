@@ -1,6 +1,6 @@
  a simple rpc framework for java
 =================================================
-集成 jdk,jackson,fasterxml,protostuff,kryo,protobuf,作为序列化工具,可以轻松转化序列化方式,使用 4.0.24 作为 NIO。
+集成 jdk,jackson,fasterxml,protostuff,kryo,protobuf,作为序列化工具,可以轻松转化序列化方式,使用 4.0.24 作为 NIO,使用zookeeper 3.4.6来做注册中心,容错性及可用性
 --------------------------------------------------
 1. server class;
 ```ruby
