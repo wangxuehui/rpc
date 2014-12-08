@@ -20,7 +20,6 @@ import io.netty.util.ReferenceCountUtil;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月3日 下午3:17:26 类说明
  */
 public class SnNettyRpcServerHandler extends SimpleChannelInboundHandler<SnRpcRequest> {
 	private static final Logger LOGGER = LoggerFactory

@@ -13,8 +13,10 @@ import org.skyim.snrpc.conf.SnRpcConfig;
 import org.skyim.snrpc.util.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
- 
+/**
+ * @author skyim E-mail:wxh64788665@gmail.com
+ * 类说明
+ */
 public class ServiceProvider {
  
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceProvider.class);

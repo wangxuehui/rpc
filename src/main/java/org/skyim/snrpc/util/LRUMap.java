@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author zhaoliangang 2014-11-13
+ * @author skyim E-mail:wxh64788665@gmail.com
  */
 public class LRUMap<K, V> extends LinkedHashMap<K, V> implements Map<K, V> {
 	private static final long serialVersionUID = -188971896404993320L;

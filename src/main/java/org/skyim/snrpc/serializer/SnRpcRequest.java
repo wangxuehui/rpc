@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月2日 下午2:07:18
  * 类说明
  */
 public class SnRpcRequest implements Serializable{

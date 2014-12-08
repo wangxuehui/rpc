@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月4日 上午11:39:50 类说明
  */
 public class CommonSnRpcClient implements SnRpcClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SnRpcConfig.class);

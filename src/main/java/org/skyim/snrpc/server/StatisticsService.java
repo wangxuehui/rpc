@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月3日 下午4:28:25
  * 类说明
  */
 public class StatisticsService {

@@ -5,7 +5,6 @@ import java.util.Map;
 
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年11月29日 下午5:29:57
  * 类说明
  */
 public class HandlerMapper {

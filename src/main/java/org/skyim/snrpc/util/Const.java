@@ -1,7 +1,6 @@
 package org.skyim.snrpc.util;
 /**
  * @author skyim E-mail:wxh64788665@gmail.com
- * @version 创建时间：2014年12月5日 下午3:14:32
  * 类说明
  */
 public interface Const {
