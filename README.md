@@ -116,7 +116,13 @@ public class ClientDemo {
 
 ```
 
-5.要求
-+ jdk1.7 以上
+
+
+6.要求
++ jdk1.7 以上的
 + maven 3 以上
++ zookeeper 官方安装就行
+注意：我们首先需要使用 ZooKeeper 的客户端工具创建一个持久性 ZNode，名为“/skyim”，该节点是不存放任何数据的，可使用如下命令：
+create /skyim null
+
 
