@@ -5,5 +5,4 @@ package org.skyim.snrpc;
  */
 public interface SnRpcServer {
 	void start() throws Throwable;
-	void end() throws Throwable;
 }

@@ -130,9 +130,4 @@ public class SnNettyRpcServer implements SnRpcServer{
 		
 	}
 
-	public void end() throws Throwable {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
